@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<resources>
+    <string name="app_name">AR 목적지</string>
+    <string name="structure">원하는 건물을 선택해주세요.</string>
+    <string name="selectedstructure">선택된 건물 = </string>
+    <string name="one">인문관</string>
+    <string name="two">자연공학관</string>
+    <string name="three">본관</string>
+    <string name="four">원화관</string>
+    <string name="five">학생회관</string>
+    <string name="six">도서관</string>
+    <string name="seven">공학관</string>
+</resources>

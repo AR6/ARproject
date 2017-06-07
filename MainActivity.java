@@ -1,31 +1,50 @@
-package com.test3.suyoung.test3project;
+package com.example.user.ar3;
 
-import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
-import android.widget.RelativeLayout;
+import android.support.v7.app.AppCompatActivity;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.Button;
+import android.widget.Spinner;
+import android.widget.TextView;
 
-import com.skp.Tmap.TMapView;
+    public class MainActivity extends AppCompatActivity implements
+            AdapterView.OnItemSelectedListener
+    {
+        @Override
+        protected void onCreate(Bundle savedInstanceState) {
+            super.onCreate(savedInstanceState);
+            setContentView(R.layout.activity_main);
 
-public class MainActivity extends Activity {
+            Button button = (Button)this.findViewById(R.id.getbutton);
+            button.setOnClickListener(new Button.OnClickListener(){
+                    @Override public void onClick(View v)
+                {
+                    Intent i = new Intent(MainActivity.this, SubActivity.class);
+                    startActivity(i);
+                }
+                                      });
+            Spinner spinner = (Spinner)this.findViewById(R.id.spinnerid);
+            spinner.setOnItemSelectedListener(this);
+        }
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
 
-        RelativeLayout relativeLayout = new RelativeLayout(this);
-        TMapView tmapview = new TMapView(this);
+    public void onItemSelected(AdapterView<?> parent, View view,
+                               int position, long id)
+    {
+        String number = null;
+        String[] numberArray =
+                getResources().getStringArray(R.array.number_array);
+        number = numberArray[position];
 
-        tmapview.setSKPMapApiKey("ce940124-25ad-3534-b894-727562e95d59");
+        TextView selectNumber = (TextView)this.findViewById(R.id.selectnumber);
+        selectNumber.setText(number);
+    }
 
-        tmapview.setCompassMode(true);
-        tmapview.setIconVisibility(true);
-        tmapview.setZoomLevel(15);
-        tmapview.setMapType(TMapView.MAPTYPE_STANDARD);
-        tmapview.setLanguage(TMapView.LANGUAGE_KOREAN);
-        tmapview.setTrackingMode(true);
-        tmapview.setSightVisible(true);
-        relativeLayout.addView(tmapview);
-        setContentView(relativeLayout);
+
+    public void onNothingSelected(AdapterView<?> parent)
+    {
+        ;
     }
 }

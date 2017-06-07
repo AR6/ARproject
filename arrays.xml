@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="number_array">
+        <item>@string/one</item>
+        <item>@string/two</item>
+        <item>@string/three</item>
+        <item>@string/four</item>
+        <item>@string/five</item>
+        <item>@string/six</item>
+        <item>@string/seven</item>
+    </string-array>
+</resources>
