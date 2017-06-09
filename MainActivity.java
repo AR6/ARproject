@@ -1,50 +1,89 @@
-package com.example.user.ar3;
+package com.test3.suyoung.test3project;
 
-import android.content.Intent;
+import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Color;
+import android.location.Location;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
-import android.view.View;
-import android.widget.AdapterView;
-import android.widget.Button;
-import android.widget.Spinner;
-import android.widget.TextView;
+import android.app.Activity;
+import android.widget.LinearLayout;
+import android.widget.Toast;
 
-    public class MainActivity extends AppCompatActivity implements
-            AdapterView.OnItemSelectedListener
-    {
-        @Override
-        protected void onCreate(Bundle savedInstanceState) {
-            super.onCreate(savedInstanceState);
-            setContentView(R.layout.activity_main);
+import  com.skp.Tmap.TMapData.FindPathDataListenerCallback;
+import  com.skp.Tmap.TMapData;
+import com.skp.Tmap.TMapGpsManager;
+import com.skp.Tmap.TMapPoint;
+import com.skp.Tmap.TMapPolyLine;
+import com.skp.Tmap.TMapView;
 
-            Button button = (Button)this.findViewById(R.id.getbutton);
-            button.setOnClickListener(new Button.OnClickListener(){
-                    @Override public void onClick(View v)
-                {
-                    Intent i = new Intent(MainActivity.this, SubActivity.class);
-                    startActivity(i);
-                }
-                                      });
-            Spinner spinner = (Spinner)this.findViewById(R.id.spinnerid);
-            spinner.setOnItemSelectedListener(this);
+import java.util.ArrayList;
+//단말의 위치탐색 클래스
+public class MainActivity extends Activity implements TMapGpsManager.onLocationChangedCallback {
+
+    private  Context mContext = null;
+    private boolean m_bTrackingMode = true;
+
+    private  TMapData tmapdata = null;
+    private TMapGpsManager tmapgps = null;
+    private TMapView tmapview = null;
+    private static String mApiKey ="ce940124-25ad-3534-b894-727562e95d59";
+
+    private ArrayList<TMapPoint> m_tampPoint = new ArrayList<TMapPoint>();
+    private ArrayList<String> mArrayMarkerID = new ArrayList<String>();
+    private ArrayList<MapPoint> m_mapPoint =new ArrayList<MapPoint>();
+
+    @Override
+    public void onLocationChange(Location location){
+        if (m_bTrackingMode){
+            tmapview.setLocationPoint(location.getLongitude(), location.getLatitude());
         }
-
-
-    public void onItemSelected(AdapterView<?> parent, View view,
-                               int position, long id)
-    {
-        String number = null;
-        String[] numberArray =
-                getResources().getStringArray(R.array.number_array);
-        number = numberArray[position];
-
-        TextView selectNumber = (TextView)this.findViewById(R.id.selectnumber);
-        selectNumber.setText(number);
     }
 
+    @Override
+    protected void onCreate(Bundle savedInstanceState){
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
 
-    public void onNothingSelected(AdapterView<?> parent)
-    {
-        ;
+        mContext = this;
+
+        LinearLayout linearLayout = (LinearLayout) findViewById(R.id.mapview);
+        tmapview = new TMapView(this);
+        linearLayout.addView(tmapview);
+        tmapview.setSKPMapApiKey(mApiKey);
+
+        /*현재 보는 방향*/
+        tmapview.setCompassMode(true);
+
+        /*현위치 아이콘표시 */
+        tmapview.setIconVisibility(true);
+
+        /*줌레벨*/
+        tmapview.setZoomLevel(15);
+        tmapview.setMapType(TMapView.MAPTYPE_STANDARD);
+        tmapview.setCenterPoint(36.798933, 127.074139);
+        tmapview.setLanguage(TMapView.LANGUAGE_KOREAN);
+
+        tmapgps = new TMapGpsManager(MainActivity.this);
+        tmapgps.setMinTime(1000);
+        tmapgps.setMinDistance(5);
+        tmapgps.setProvider(tmapgps.NETWORK_PROVIDER); //연결된 인터넷으로 현 위치 받음
+        //실내일 때 유용
+        //tmapgps.setProvider(tmapgps.GPS_PROVIDER);    //gps로 현 위치를 잡음
+        tmapgps.OpenGps();
+
+        /*화면중심을 단말의 현재위치로 이동*/
+        tmapview.setTrackingMode(true);
+        tmapview.setSightVisible(true);
+
+        TMapPoint startpoint = new TMapPoint(36.7988319, 127.0758641);
+        TMapPoint endpoint = new TMapPoint(36.800309, 127.074910);
+        tmapdata = new TMapData();
+        tmapdata.findPathData(startpoint, endpoint, new FindPathDataListenerCallback() {
+            @Override
+            public void onFindPathData(TMapPolyLine tMapPolyLine) {
+                tmapview.addTMapPath(tMapPolyLine);
+            }
+        });
     }
 }
