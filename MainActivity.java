@@ -41,7 +41,7 @@ public class MainActivity extends Activity implements TMapGpsManager.onLocationC
     }
 
     @Override
-    protected void onCreate(Bundle savedInstanceState){
+    protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
@@ -61,7 +61,6 @@ public class MainActivity extends Activity implements TMapGpsManager.onLocationC
         /*줌레벨*/
         tmapview.setZoomLevel(15);
         tmapview.setMapType(TMapView.MAPTYPE_STANDARD);
-        tmapview.setCenterPoint(36.798933, 127.074139);
         tmapview.setLanguage(TMapView.LANGUAGE_KOREAN);
 
         tmapgps = new TMapGpsManager(MainActivity.this);
@@ -75,15 +74,25 @@ public class MainActivity extends Activity implements TMapGpsManager.onLocationC
         /*화면중심을 단말의 현재위치로 이동*/
         tmapview.setTrackingMode(true);
         tmapview.setSightVisible(true);
-
-        TMapPoint startpoint = new TMapPoint(36.7988319, 127.0758641);
+        drawPedestrianPath();
+    }
+    //보행자 경로찾기
+    public void drawPedestrianPath(){
+        TMapPoint startpoint = tmapview.getCenterPoint();
         TMapPoint endpoint = new TMapPoint(36.800309, 127.074910);
         tmapdata = new TMapData();
         tmapdata.findPathData(startpoint, endpoint, new FindPathDataListenerCallback() {
             @Override
             public void onFindPathData(TMapPolyLine tMapPolyLine) {
+                tMapPolyLine.setLineColor(Color.BLUE);
                 tmapview.addTMapPath(tMapPolyLine);
             }
         });
     }
+    //현재위치 받아오기
+    public  void getCenterPoint(){
+        TMapPoint point = tmapview.getCenterPoint();
+    }
+
+
 }
