@@ -1,0 +1,12 @@
+<resources>
+    <string name="app_name">Test3project</string>
+    <string-array name="bd">
+        <item>본관</item>
+        <item>원화관</item>
+        <item>인문관</item>
+        <item>자연관</item>
+        <item>공학관</item>
+        <item>보건관</item>
+        <item>학생회관</item>
+    </string-array>
+</resources>
